@@ -13,7 +13,6 @@ import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import frc.robot.Constants;
 
 import com.ctre.phoenix6.hardware.CANcoder;
-import com.ctre.phoenix6.hardware.TalonFX;
 
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 
@@ -24,14 +23,14 @@ import com.revrobotics.spark.SparkLowLevel.MotorType;
  */
 public class SwerveModule {
 
-    private static final double TALON_UNITS_TO_METERS = 2 * Math.PI * Constants.WHEEL_RADIUS / Constants.SWERVE_MOVING_ENCODER_RESOLUTION / Constants.SWERVE_MOVING_GEAR_RATIO;
+    // private static final double TALON_UNITS_TO_METERS = 2 * Math.PI * Constants.WHEEL_RADIUS / Constants.SWERVE_MOVING_ENCODER_RESOLUTION / Constants.SWERVE_MOVING_GEAR_RATIO;
     // private static final double CANCODER_UNITS_TO_RADIANS = 2 * Math.PI / Constants.SWERVE_TURNING_ENCODER_RESOLUTION / Constants.SWERVE_TURNING_GEAR_RATIO;
     // private static final double CANCODER_UNITS_TO_RADIANS = 2 * Math.PI / (150/7);
     // private static final double CANCODER_UNITS_TO_RADIANS = 5 / 1.044 / 0.75;
     private static final double CANCODER_UNITS_TO_RADIANS = 2.0 * Math.PI;
 
     // These are both motor controllers (that connect to the CAN bus)
-    private TalonFX driveMotor;
+    private SparkMax driveMotor;
     private SparkMax turnMotor;
 
     private Rotation2d offset;
@@ -73,7 +72,7 @@ public class SwerveModule {
      * @param offset The offset required to make the motor point forwards.
      */
     public SwerveModule(int turnMotorPort, int driveMotorPort, int encoderPort, Rotation2d offset) {
-        driveMotor = new TalonFX(driveMotorPort);
+        driveMotor = new SparkMax(driveMotorPort, MotorType.kBrushless);
         turnMotor = new SparkMax(turnMotorPort, MotorType.kBrushless);
 
         turnEncoder = new CANcoder(encoderPort);
@@ -95,11 +94,11 @@ public class SwerveModule {
     }
 
     public double getDrivePosition() {
-        return driveMotor.getPosition().getValueAsDouble() * TALON_UNITS_TO_METERS;
+        return driveMotor.getEncoder().getPosition() * Constants.WHEEL_RADIUS * 2 * Math.PI;
     }
 
     public double getDriveVelocity() {
-        return driveMotor.getVelocity().getValueAsDouble() * TALON_UNITS_TO_METERS;
+        return driveMotor.getEncoder().getVelocity() * Constants.WHEEL_RADIUS * 2 * Math.PI;
     }
 
 
@@ -147,7 +146,7 @@ public class SwerveModule {
 
         // Optimize the reference state to avoid spinning further than 90 degrees.
         // This will find the optimal path to get to the desired rotation.
-        desiredState = SwerveModuleState.optimize(desiredState, encoderRotation);
+        desiredState.optimize(encoderRotation);
 
         // Scale speed by cosine of angle error. This scales down movement perpendicular to the desired
         // direction of travel that can occur when modules change directions. This results in smoother

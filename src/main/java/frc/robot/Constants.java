@@ -23,7 +23,7 @@ public class Constants {
     public static final int BACK_RIGHT_DRIVE_MOTOR_PORT = 20;    // WIP CAN Port
     public static final int BACK_RIGHT_CANCODER_PORT = 27;
 
-    public static final double WHEEL_RADIUS = 0.2d;             // WIP in meters
+    public static final double WHEEL_RADIUS = 0.04995d;             // WIP in meters
     public static final int SWERVE_TURNING_ENCODER_RESOLUTION = 4096;  // WIP Number of ticks it takes to turn the wheel (swerve) completely.
     public static final int SWERVE_MOVING_ENCODER_RESOLUTION = 16384;  // WIP Number of ticks it takes the driving wheel to make a full rotation.
     public static final int SWERVE_TURNING_GEAR_RATIO = 1;             // WIP The gear ratio to divide by when converting the encoder ticks to distance.

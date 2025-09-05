@@ -13,10 +13,15 @@ public class ShootCommand extends Command {
 
     @Override
     public void initialize() {
-        // Open the air flow
-        Robot.map.shooter.setSolenoid(true);
-        // 0.2s after
-        endTime = System.currentTimeMillis() + 200;
+        if (Robot.map.shooter != null) {
+            this.cancel();
+        }
+        else {
+            // Open the air flow
+            Robot.map.shooter.setSolenoid(true);
+            // 0.2s after
+            endTime = System.currentTimeMillis() + 200;
+        }
     }
 
     @Override

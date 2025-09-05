@@ -21,7 +21,7 @@ public class ShooterSubsystem extends SubsystemBase {
 
     // private static final double TURN_MOTOR_UNITS_TO_RADIANS = (2 * Math.PI) / Constants.SHOOTER_BARREL_TURN_MOTOR_RESOLUTION / Constants.SHOOTER_BARREL_GEAR_RATIO;
     // private static final double TURN_MOTOR_UNITS_TO_RADIANS = 1.0 / 40.0;
-    private static final double TURN_MOTOR_UNITS_TO_RADIANS = (Math.PI * 2.0) / 106.0;
+    // private static final double TURN_MOTOR_UNITS_TO_RADIANS = (Math.PI * 2.0) / 106.0;
     private static final double PIVOT_MOTOR_TO_RADIANS = (2 * Math.PI) / Constants.SHOOTER_PIVOT_MOTOR_RESOLUTION / Constants.SHOOTER_PIVOT_GEAR_RATIO;
 
     public static final boolean HAS_SWITCH = false;

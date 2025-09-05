@@ -3,7 +3,6 @@ package frc.robot;
 import frc.robot.subsystems.leds.LEDSubsystem;
 import frc.robot.subsystems.shooter.ShooterSubsystem;
 import frc.robot.subsystems.swerve.SwerveSubsystem;
-import frc.robot.subsystems.vision.VisionSubsystem;
 
 /**
  * 4
@@ -18,7 +17,6 @@ public class RobotMap {
     public LEDSubsystem leds = null;
     public ShooterSubsystem shooter = null;
     public SwerveSubsystem swerve = null;
-    //public VisionSubsystem vision = null;
 
 
     /**
@@ -28,7 +26,6 @@ public class RobotMap {
     public RobotMap() {
         // leds = new LEDSubsystem();
         shooter = new ShooterSubsystem();
-        // swerve = new SwerveSubsystem();
-        // vision = new VisionSubsystem();
+        swerve = new SwerveSubsystem();
     }
 }

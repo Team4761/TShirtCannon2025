@@ -14,7 +14,7 @@ public class ShootAndRotateCommand extends SequentialCommandGroup {
     public ShootAndRotateCommand(boolean isCounterClockwise) {
         super(
             new ShootCommand(),
-            new RotateBarrelCommand(isCounterClockwise)
+            new RotateBarrelCommand(isCounterClockwise).withTimeout(4.0)
         );
     }
 }

@@ -56,7 +56,7 @@ public class RobocketsController extends XboxController{
             }
             // Rotate the barrel on button pushes
             if (getBButtonPressed()) {
-                commandScheduler.schedule(new RotateBarrelCommand(false));
+                commandScheduler.schedule(new RotateBarrelCommand(false).withTimeout(4.0));
             }
             // Shoot and rotate if use the bumpers
             if (getLeftBumperButton()) {
@@ -68,11 +68,11 @@ public class RobocketsController extends XboxController{
 
             if (getPOV() == 90) {
                 if (!ShooterSubsystem.activelyRotating)
-                    commandScheduler.schedule(new RotateBarrelCommand(false));
+                    commandScheduler.schedule(new RotateBarrelCommand(false).withTimeout(4.0));
             }
             if (getPOV() == 270) {
                 if (!ShooterSubsystem.activelyRotating)
-                    commandScheduler.schedule(new RotateBarrelCommand(true));
+                    commandScheduler.schedule(new RotateBarrelCommand(true).withTimeout(4.0));
             }
             if (getPOV() == 0) {
                 Robot.map.shooter.pivotBarrel(-0.15);
@@ -106,7 +106,7 @@ public class RobocketsController extends XboxController{
     public void testPeriodic() {
         // Motor selection
         if (getLeftBumperButton()) {
-            currentMotor = Math.abs(currentMotor - 1) % 4;
+            currentMotor = (currentMotor - 1) % 4;
         }
         if (getRightBumperButton()) {
             currentMotor = (currentMotor + 1) % 4;
