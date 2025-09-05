@@ -10,17 +10,17 @@ public class Constants {
 
 
     // Swerve
-    public static final int FRONT_LEFT_TURN_MOTOR_PORT = 60;     // WIP CAN Port
-    public static final int FRONT_LEFT_DRIVE_MOTOR_PORT = 100;    // WIP CAN Port
-    public static final int FRONT_LEFT_CANCODER_PORT = 40;          // CAN Port;
+    public static final int FRONT_LEFT_TURN_MOTOR_PORT = 6;     // WIP CAN Port
+    public static final int FRONT_LEFT_DRIVE_MOTOR_PORT = 10;    // WIP CAN Port
+    public static final int FRONT_LEFT_CANCODER_PORT = 4;          // CAN Port;
 
-    public static final int FRONT_RIGHT_TURN_MOTOR_PORT = 50;     // WIP CAN Port
-    public static final int FRONT_RIGHT_DRIVE_MOTOR_PORT = 80;    // WIP CAN Port
-    public static final int FRONT_RIGHT_CANCODER_PORT = 10;
+    public static final int FRONT_RIGHT_TURN_MOTOR_PORT = 5;     // WIP CAN Port
+    public static final int FRONT_RIGHT_DRIVE_MOTOR_PORT = 8;    // WIP CAN Port
+    public static final int FRONT_RIGHT_CANCODER_PORT = 1;
 
-    public static final int BACK_LEFT_TURN_MOTOR_PORT = 70;     // WIP CAN Port
-    public static final int BACK_LEFT_DRIVE_MOTOR_PORT = 90;    // WIP CAN Port
-    public static final int BACK_LEFT_CANCODER_PORT = 30;
+    public static final int BACK_LEFT_TURN_MOTOR_PORT = 7;     // WIP CAN Port
+    public static final int BACK_LEFT_DRIVE_MOTOR_PORT = 9;    // WIP CAN Port
+    public static final int BACK_LEFT_CANCODER_PORT = 3;
 
     public static final int BACK_RIGHT_TURN_MOTOR_PORT = 11;     // WIP CAN Port
     public static final int BACK_RIGHT_DRIVE_MOTOR_PORT = 12;    // WIP CAN Port
