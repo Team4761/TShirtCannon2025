@@ -31,7 +31,7 @@ public class SwerveModule {
     private static final double CANCODER_UNITS_TO_RADIANS = 2.0 * Math.PI;
 
     // These are both motor controllers (that connect to the CAN bus)
-    private SparkMax driveMotor;
+    private TalonFX driveMotor;
     private SparkMax turnMotor;
 
     private Rotation2d offset;
@@ -73,7 +73,7 @@ public class SwerveModule {
      * @param offset The offset required to make the motor point forwards.
      */
     public SwerveModule(int turnMotorPort, int driveMotorPort, int encoderPort, Rotation2d offset) {
-        driveMotor = new SparkMax(driveMotorPort, MotorType.kBrushless);
+        driveMotor = new TalonFX(driveMotorPort);
         turnMotor = new SparkMax(turnMotorPort, MotorType.kBrushless);
 
         turnEncoder = new CANcoder(encoderPort);
@@ -180,6 +180,6 @@ public class SwerveModule {
      * @param speed A number between -1 and 1 where 1 represents 100% speed.
      */
     public void setDriveSpeed(double speed) {
-        turnMotor.set(speed);
+        driveMotor.set(speed);
     }
 }

@@ -56,11 +56,11 @@ public class RobocketsController extends XboxController{
             }
             // Rotate the barrel on button pushes
             if (getBButtonPressed()) {
-                // commandScheduler.schedule(new RotateBarrelCommand(false));
+                commandScheduler.schedule(new RotateBarrelCommand(false));
             }
             // Shoot and rotate if use the bumpers
             if (getLeftBumperButton()) {
-                // commandScheduler.schedule(new ShootAndRotateCommand(true));
+                commandScheduler.schedule(new ShootAndRotateCommand(true));
             }
             if (getRightBumperButton()) {
                 commandScheduler.schedule(new ShootAndRotateCommand(false));

@@ -43,8 +43,8 @@ public class Constants {
 
     // Shooter
     public static final int SOLENOID_PORT = 0;              // WIP PWM port I believe.
-    public static final int SHOOTER_TURN_MOTOR_PORT = 1;    // CAN port.
-    public static final int SHOOTER_PIVOT_MOTOR_PORT = 11;   // CAN port.
+    public static final int SHOOTER_TURN_MOTOR_PORT = 14;    // CAN port.
+    public static final int SHOOTER_PIVOT_MOTOR_PORT = 13;   // CAN port.
     public static final int SHOOTER_BARREL_SWITCH_PORT = 0; // WIP DIO port.
 
     public static final int SHOOTER_BARREL_TURN_MOTOR_RESOLUTION = 1;       // The number of ticks it takes to turn the barrel rotation motor one full time.

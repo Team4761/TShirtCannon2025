@@ -42,7 +42,7 @@ public class ShooterSubsystem extends SubsystemBase {
         pivotMotor = new SparkMax(Constants.SHOOTER_PIVOT_MOTOR_PORT, MotorType.kBrushless);
 
         // Previous values = 1.0 / 16.0 / 1.1
-        turnMotor.getEncoder().setPosition(TURN_MOTOR_UNITS_TO_RADIANS);
+        turnMotor.getEncoder().setPosition(1.0); // .setPosition(TURN_MOTOR_UNITS_TO_RADIANS);
 
         if (HAS_SWITCH)
             barrelSwitch = new DigitalInput(Constants.SHOOTER_BARREL_SWITCH_PORT);
