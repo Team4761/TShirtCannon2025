@@ -4,21 +4,22 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Robot;
+import frc.robot.Constants;
 
 /**
  * This will rotate the barrel of the shooter until the switch has been activated.
  */
 public class RotateBarrelCommand extends Command {
 
-    private static final Rotation2d ROTATION_BETWEEN_BARRELS = new Rotation2d(Units.degreesToRadians(45));
+    private static final Rotation2d ROTATION_BETWEEN_BARRELS = new Rotation2d(Units.degreesToRadians(Constants.SHOOTER_BARREL_SPACING_ANGLE));
 
     private boolean isCCW;
     private boolean lastSwitchState = false;
     private Rotation2d rotationGoal = ROTATION_BETWEEN_BARRELS;
 
     /**
-     * This will rotate the barrel of the shooter until the switch has been activated.
-     * If there is a switch, then it will use the switch. Otherwise, it will use the encoder units.
+     * If a switch is present, this will rotate the barrel of the shooter until the switch has been activated, 
+     *      otherwise it will use encoder units to get within 4 deg of target rotation.
      * @param isCounterClockwise True if the barrel should rotate counter clockwise. False if it should rotate clockwise.
      */
     public RotateBarrelCommand(boolean isCounterClockwise) {
@@ -33,9 +34,9 @@ public class RotateBarrelCommand extends Command {
 
         System.out.println("Started rotating! Counterclockwise: " + isCCW);
         if (isCCW)
-            Robot.map.shooter.rotateBarrel(0.2);
+            Robot.map.shooter.rotateBarrel(Constants.SHOOTER_BARREL_TURN_SPEED);
         else
-            Robot.map.shooter.rotateBarrel(-0.2);
+            Robot.map.shooter.rotateBarrel(-Constants.SHOOTER_BARREL_TURN_SPEED);
         // If there is no limit switch, set the target goal
         if (!ShooterSubsystem.HAS_SWITCH) {
             if (isCCW)
@@ -49,7 +50,7 @@ public class RotateBarrelCommand extends Command {
     public void end(boolean interrupted) {
         ShooterSubsystem.activelyRotating = false;
 
-        System.out.println("Finished rotating!");
+        System.out.println(interrupted ? "Rotation interrupted and stopped!" : "Finished rotating!");
         Robot.map.shooter.rotateBarrel(0);
     }
 

@@ -5,13 +5,12 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Robot;
+import frc.robot.Constants;
 
 /**
  * This command uses the Swerve Subsystem to move a set distance using the Swerve odometry.
  */
 public class MoveCommand extends Command {
-
-    private static final double MAX_SPEED = 0.4;    // In percents where 1.0 = 100%
 
     // x,y are in meters. +x = forwards. +y = left
     private double x;
@@ -51,9 +50,9 @@ public class MoveCommand extends Command {
     public void execute() {
         Transform2d distanceLeft = targetPosition.minus(Robot.map.swerve.getPosition());
         Robot.map.swerve.drive(
-            Math.signum(distanceLeft.getX()) * MAX_SPEED,
-            Math.signum(distanceLeft.getY()) * MAX_SPEED,
-            Math.signum(distanceLeft.getRotation().getDegrees()) * MAX_SPEED,
+            Math.signum(distanceLeft.getX()) * Constants.MAX_DRIVE_SPEED,
+            Math.signum(distanceLeft.getY()) * Constants.MAX_DRIVE_SPEED,
+            Math.signum(distanceLeft.getRotation().getDegrees()) * Constants.MAX_DRIVE_SPEED,
             Robot.periodSeconds
         );
     }

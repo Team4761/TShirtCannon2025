@@ -2,6 +2,7 @@ package frc.robot.subsystems.shooter;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Robot;
+import frc.robot.Constants;
 
 /**
  * This will simply open up the solenoid and then close it after 0.2 seconds.
@@ -19,8 +20,7 @@ public class ShootCommand extends Command {
         else {
             // Open the air flow
             Robot.map.shooter.setSolenoid(true);
-            // 0.2s after
-            endTime = System.currentTimeMillis() + 200;
+            endTime = System.currentTimeMillis() + Constants.SHOOTER_SOLENOID_DURATION_MS;
         }
     }
 
@@ -28,6 +28,7 @@ public class ShootCommand extends Command {
     public void end(boolean interrupted) {
         // Close the air flow
         Robot.map.shooter.setSolenoid(false);
+        System.out.println(interrupted ? "Solenoid interrupted and closed!" : "Solenoid closed!");
     }
 
     @Override

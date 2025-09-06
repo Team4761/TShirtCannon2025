@@ -6,7 +6,6 @@ package frc.robot;
 
 import org.opencv.core.Mat;
 
-import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.cscore.CvSource;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -20,21 +19,16 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
  * project.
  */
 public class Robot extends TimedRobot {
-
-  // DO NOT REMOVE (very important, everything will crash and burn without this line)
-  boolean win = true;
-
-  //
+  // Initialize empty double for storing the time period between calls to Periodic() functions
   public static double periodSeconds = 0.0;
 
-  // There can be only be one (Highlander)
+  // Only a singular instance should exist
   public static RobotMap map = new RobotMap();
 
   // Joystick control
-  private static final RobocketsController controller = new RobocketsController(Constants.CONTROLLER_PORT);
+  private static final RobotController controller = new RobotController(Constants.CONTROLLER_PORT);
 
-  private static final String kDefaultAuto = "Default";
-  private static final String kCustomAuto = "My Auto";
+  // SmartDashboard setup
   private String m_autoSelected;
   private final SendableChooser<String> m_chooser = new SendableChooser<>();
 
@@ -44,11 +38,9 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotInit() {
-    m_chooser.setDefaultOption("Default Auto", kDefaultAuto);
-    m_chooser.addOption("My Auto", kCustomAuto);
+    m_chooser.setDefaultOption("Default Auto", "Default Auto");
+    m_chooser.addOption("Custom Auto", "My Auto");
     SmartDashboard.putData("Auto choices", m_chooser);
-
-    CameraServer.startAutomaticCapture();
   }
 
   /**
@@ -76,7 +68,6 @@ public class Robot extends TimedRobot {
   @Override
   public void autonomousInit() {
     m_autoSelected = m_chooser.getSelected();
-    // m_autoSelected = SmartDashboard.getString("Auto Selector", kDefaultAuto);
     System.out.println("Auto selected: " + m_autoSelected);
   }
 
@@ -84,37 +75,17 @@ public class Robot extends TimedRobot {
   @Override
   public void autonomousPeriodic() {
     CommandScheduler.getInstance().run();
-    /*
-      switch (m_autoSelected) {
-        case kCustomAuto:
-          // Put custom auto code here
-          break;
-        case kDefaultAuto:
-        default:
-          // Put default auto code here
-          break;
-      }*/
   }
 
   Mat frame;
   CvSource source;
   /** This function is called once when teleop is enabled. */
   @Override
-  public void teleopInit() {
-    // frame = new Mat();
-    // source = CameraServer.putVideo("Processed", 640, 480);
-  }
+  public void teleopInit() {}
 
   /** This function is called periodically during operator control. */
   @Override
   public void teleopPeriodic() {
-    // CameraServer.getVideo().grabFrame(frame);
-    // Imgproc.rectangle(frame, 
-    // new Point(100,100),
-    // new Point(200,200),
-    // new Scalar(100),
-    // 100);
-    // source.putFrame(frame);
     CommandScheduler.getInstance().run();
     controller.teleopPeriodic();
   }

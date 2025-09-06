@@ -26,6 +26,7 @@ public class SwerveSubsystem extends SubsystemBase{
     
     // The module offsets from the CENTER of the robot to the CENTER of the wheel on each module.
     // All in meters. +x = forwards. +y = left.
+    // NOTE! Move these 'magic numbers' to Constants.java
     private final Translation2d frontLeftLocation = new Translation2d(+0.305, +0.305);
     private final Translation2d frontRightLocation = new Translation2d(+0.305, -0.305);
     private final Translation2d backLeftLocation = new Translation2d(-0.305, +0.305);
@@ -53,9 +54,6 @@ public class SwerveSubsystem extends SubsystemBase{
                 backRight.getPosition()
         }
     );
-
-    // DETERMINES IF IT IS FIELD OR ROBOT ORIENTED.
-    private boolean fieldRelative = true;
 
 
     /**
@@ -117,13 +115,13 @@ public class SwerveSubsystem extends SubsystemBase{
      * @param xSpeed Speed of the robot in the x direction (+x = forwards) (meters per second?)
      * @param ySpeed Speed of the robot in the y direction (+y = left) (meters per second?)
      * @param rot Angular rate of the robot (+rot = CCW or rotating left) (radians per second?)
-     * @param fieldRelative Whether the provided x and y speeds are relative to the field.
+     * @param periodSeconds Periodic time between calls to this function (seconds)
      */
     public void drive(double xSpeed, double ySpeed, double rot, double periodSeconds) {
         // Represents the speed of the entire robot essentially
         ChassisSpeeds chassisSpeeds = new ChassisSpeeds(xSpeed, ySpeed, rot);
         // Makes the speeds relative to the field if true (where +x represents the front side of the field)
-        if (fieldRelative) {
+        if (Constants.FIELD_RELATIVE) {
             chassisSpeeds = ChassisSpeeds.fromRobotRelativeSpeeds(chassisSpeeds, getGyroRotation());
         }
         // Essentially discretizing it makes it so that each direction (x, y, rotation) work independently based on time rather than each other (I think).

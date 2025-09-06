@@ -9,7 +9,7 @@ import frc.robot.subsystems.shooter.RotateBarrelCommand;
 import frc.robot.subsystems.shooter.ShootAndRotateCommand;
 import frc.robot.subsystems.shooter.ShooterSubsystem;
 
-public class RobocketsController extends XboxController{
+public class RobotController extends XboxController{
 
     // Just for debugging when controlling each motor individually
     private int currentMotor = 0;
@@ -29,7 +29,7 @@ public class RobocketsController extends XboxController{
      * Creates a new Xbox controller that's connected to the computer (drivestation).
      * @param port The USB port as decided by the Driverstation App.
      */
-    public RobocketsController(int port) {
+    public RobotController(int port) {
         super(port);
     }
 
@@ -90,7 +90,7 @@ public class RobocketsController extends XboxController{
                 -getLeftY(),   // Negative to make up the positive direction
                 -getLeftX(),
                 -getRightX(),  // Negative to make left (counterclockwise) the positive direction.
-                Robot.periodSeconds
+                Robot.periodSeconds // Used to ensure consistent movement (built in param)
             );
 
             if (getXButtonPressed()) {

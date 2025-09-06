@@ -1,6 +1,5 @@
 package frc.robot;
 
-import frc.robot.subsystems.leds.LEDSubsystem;
 import frc.robot.subsystems.shooter.ShooterSubsystem;
 import frc.robot.subsystems.swerve.SwerveSubsystem;
 
@@ -14,7 +13,6 @@ import frc.robot.subsystems.swerve.SwerveSubsystem;
 public class RobotMap {
     
     // Start all the subsystems as null so Java doesn't throw errors.
-    public LEDSubsystem leds = null;
     public ShooterSubsystem shooter = null;
     public SwerveSubsystem swerve = null;
 
