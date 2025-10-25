@@ -1,3 +1,5 @@
+# CANCoders
+
 ## Interfacing with the CANCoders on the robot:
 1. Connect to the robot via wifi
 2. Open Pheonix Tuner X
@@ -17,3 +19,11 @@
 4. Click the "Config" Tab on the top left
 5. Set the magnet offset to the desired value
 6. Then click "Apply and flash configs" (the left of 4 icons)
+
+## Reading raw output from CANCoders
+1. Connect to the CANCoder devices using Pheonix Tuner X
+2. Click on the CANCoder device in the devices page
+3. Click "View More Details" on the bottom of the device page
+4. Switch the "Plot" tab on the right window
+5. Check the box that has the position of the motor
+6. Hit "Play" to start recording on the graph
