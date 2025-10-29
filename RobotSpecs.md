@@ -4,9 +4,10 @@
 
 ### Measurements
 - Y: 24.5in, X: 24.5in
+- (Measured from center of wheel to center of wheel)
 
 ### Diagram
-Turn, Drive, CANcoder
+[Turn, Drive, CANcoder]
 
 Front Left: [6, 10, 4]
 Front Right: [5, 8, 1]
