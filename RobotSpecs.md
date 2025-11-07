@@ -13,7 +13,7 @@ Front Left: [6, 10, 4]
 Front Right: [5, 8, 1]
 
 Back Left: [7, 9, 3]
-Back Right: [11, 12, 2]
+Back Right: [30, 4, 2]
 
 ### Robot specs
 - Module Type: SDSL 4i
