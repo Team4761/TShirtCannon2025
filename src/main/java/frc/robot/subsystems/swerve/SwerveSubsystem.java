@@ -1,4 +1,4 @@
-package frc.robot.subsystems;
+package frc.robot.subsystems.swerve;
 
 import frc.robot.Constants;
 
@@ -43,7 +43,7 @@ public class SwerveSubsystem extends SubsystemBase {
           /* one-time action goes here */
         });
   }
-
+  
   public Command driveCommand(DoubleSupplier translationX, DoubleSupplier translationY, DoubleSupplier angularRotationX)
   {
     return run(() -> {
@@ -54,7 +54,16 @@ public class SwerveSubsystem extends SubsystemBase {
                         Math.pow(angularRotationX.getAsDouble(), 3) * swerveDrive.getMaximumChassisAngularVelocity(),
                         true,
                         false);
+
+      System.out.println(translationX.getAsDouble() * swerveDrive.getMaximumChassisVelocity());
+      System.out.println(translationY.getAsDouble() * swerveDrive.getMaximumChassisVelocity());
+      System.out.println(Math.pow(angularRotationX.getAsDouble(), 3) * swerveDrive.getMaximumChassisAngularVelocity());
+
     });
+  }
+
+  public void reZero() {
+    this.swerveDrive.zeroGyro();
   }
 
   /**

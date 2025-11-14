@@ -10,21 +10,27 @@ public class Constants {
 
 
     // Swerve
-    public static final int FRONT_LEFT_TURN_MOTOR_PORT = 6;     // WIP CAN Port
-    public static final int FRONT_LEFT_DRIVE_MOTOR_PORT = 10;    // WIP CAN Port
-    public static final int FRONT_LEFT_CANCODER_PORT = 4;          // CAN Port;
+    class CPorts {
+        // Front left
+        public static final int FL_T = 6;  // Turn motor CAN port
+        public static final int FL_D = 10; // Drive motor CAN port
+        public static final int FL_C = 4;  // CANcoder CAN port
 
-    public static final int FRONT_RIGHT_TURN_MOTOR_PORT = 5;     // WIP CAN Port
-    public static final int FRONT_RIGHT_DRIVE_MOTOR_PORT = 8;    // WIP CAN Port
-    public static final int FRONT_RIGHT_CANCODER_PORT = 1;
+        // Front right
+        public static final int FR_T = 5;
+        public static final int FR_D = 8;
+        public static final int FR_C = 1;
 
-    public static final int BACK_LEFT_TURN_MOTOR_PORT = 7;     // WIP CAN Port
-    public static final int BACK_LEFT_DRIVE_MOTOR_PORT = 9;    // WIP CAN Port
-    public static final int BACK_LEFT_CANCODER_PORT = 3;
+        // Back left
+        public static final int BL_T = 7;
+        public static final int BL_D = 9;
+        public static final int BL_C = 3;
 
-    public static final int BACK_RIGHT_TURN_MOTOR_PORT = 11;     // WIP CAN Port
-    public static final int BACK_RIGHT_DRIVE_MOTOR_PORT = 12;    // WIP CAN Port
-    public static final int BACK_RIGHT_CANCODER_PORT = 2;
+        // Back right
+        public static final int BR_T = 11;
+        public static final int BR_D = 12;
+        public static final int BR_C = 2;
+    }
 
     public static final double WHEEL_RADIUS = 0.04995d;             // WIP in meters
     public static final int SWERVE_TURNING_ENCODER_RESOLUTION = 4096;  // WIP Number of ticks it takes to turn the wheel (swerve) completely.
@@ -39,12 +45,6 @@ public class Constants {
     public static final Rotation2d GYRO_OFFSET = new Rotation2d(0.0);  // The number inside is in degrees and must be measured.
 
     public static final boolean FIELD_RELATIVE = true;    // DETERMINES IF IT IS FIELD OR ROBOT ORIENTED.
-
-
-    // Vision
-    public static final int RESOLUTION_X = 640;     // In pixels
-    public static final int RESOLUTION_Y = 480;     // In pixels
-
 
     // Shooter
     public static final int SOLENOID_PORT = 0;              // WIP PWM port I believe.

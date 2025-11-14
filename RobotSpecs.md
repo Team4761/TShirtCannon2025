@@ -1,5 +1,6 @@
 ## Swerve Drive Train
-- SparkMax motors
+- SparkMax motors controllers
+- Neo motors
 - CANcoder encoders
 
 ### Measurements
@@ -17,7 +18,7 @@ Back Right: [30, 4, 2]
 
 ### Robot specs
 - Module Type: SDSL 4i
-- Drive Ratio: 
+- Drive Ratio: 20mm 
 
 ## Shooting system
 
