@@ -23,6 +23,7 @@ public class SwerveSubsystem extends SubsystemBase {
   public SwerveSubsystem() {
     try
     {
+      // TODO: Remove duplicate ID values, stored in both json and constants file
       swerveDrive = new SwerveParser(directory).createSwerveDrive(Constants.MAX_DRIVE_SPEED);
     } catch (Exception e)
     {
@@ -43,27 +44,38 @@ public class SwerveSubsystem extends SubsystemBase {
           /* one-time action goes here */
         });
   }
-  
+
+  /**
+   * Command to drive the robot using translative values and heading as angular velocity.
+   *
+   * @param translationX     Translation in the X direction.
+   * @param translationY     Translation in the Y direction.
+   * @param angularRotationX Rotation of the robot to set
+   * @return Drive command.
+   */
   public Command driveCommand(DoubleSupplier translationX, DoubleSupplier translationY, DoubleSupplier angularRotationX)
   {
     return run(() -> {
       // Make the robot move
-      swerveDrive.drive(SwerveMath.scaleTranslation(new Translation2d(
+      swerveDrive.drive(new Translation2d(
                             translationX.getAsDouble() * swerveDrive.getMaximumChassisVelocity(),
-                            translationY.getAsDouble() * swerveDrive.getMaximumChassisVelocity()), 0.8),
-                        Math.pow(angularRotationX.getAsDouble(), 3) * swerveDrive.getMaximumChassisAngularVelocity(),
+                            translationY.getAsDouble() * swerveDrive.getMaximumChassisVelocity()),
+                        angularRotationX.getAsDouble() * swerveDrive.getMaximumChassisAngularVelocity(),
                         true,
                         false);
-
-      System.out.println(translationX.getAsDouble() * swerveDrive.getMaximumChassisVelocity());
-      System.out.println(translationY.getAsDouble() * swerveDrive.getMaximumChassisVelocity());
-      System.out.println(Math.pow(angularRotationX.getAsDouble(), 3) * swerveDrive.getMaximumChassisAngularVelocity());
-
     });
   }
 
-  public void reZero() {
-    this.swerveDrive.zeroGyro();
+  /**
+   * Creates a command to reset the gyro of the swerve drive to zero.
+   * This is useful for recalibrating the robot's orientation during a match.
+   *
+   * @return A command that, when executed, resets the gyro to zero.
+   */
+  public Command reZeroCommand() {
+    return run(() -> {
+      this.swerveDrive.zeroGyro();
+    });
   }
 
   /**

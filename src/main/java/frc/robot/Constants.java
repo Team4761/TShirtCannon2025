@@ -10,26 +10,30 @@ public class Constants {
 
 
     // Swerve
-    class CPorts {
-        // Front left
-        public static final int FL_T = 6;  // Turn motor CAN port
-        public static final int FL_D = 10; // Drive motor CAN port
-        public static final int FL_C = 4;  // CANcoder CAN port
+    class Modules {
+        class FrontLeft {
+            public static final int TURN = 6;
+            public static final int DRIVE = 6;
+            public static final int CAN = 6;
+        }
 
-        // Front right
-        public static final int FR_T = 5;
-        public static final int FR_D = 8;
-        public static final int FR_C = 1;
+        class FrontRight {
+            public static final int TURN = 5;
+            public static final int DRIVE = 8;
+            public static final int CAN = 1;
+        }
 
-        // Back left
-        public static final int BL_T = 7;
-        public static final int BL_D = 9;
-        public static final int BL_C = 3;
+        class BackLeft {
+            public static final int TURN = 7;
+            public static final int DRIVE = 9;
+            public static final int CAN = 3;
+        }
 
-        // Back right
-        public static final int BR_T = 11;
-        public static final int BR_D = 12;
-        public static final int BR_C = 2;
+        class BackRight {
+            public static final int TURN = 30;
+            public static final int DRIVE = 4;
+            public static final int CAN = 2;
+        }
     }
 
     public static final double WHEEL_RADIUS = 0.04995d;             // WIP in meters
