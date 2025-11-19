@@ -16,6 +16,7 @@
 ### Servos/rotation
 
 ## Robot details
+- Swerve module types: MK4i
 
 ### CAN Bus
 - The CAN Bus is the connected wiring of all devices
