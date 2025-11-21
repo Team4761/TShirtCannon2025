@@ -13,14 +13,14 @@ public class Constants {
     class Modules {
         class FrontLeft {
             public static final int TURN = 6;
-            public static final int DRIVE = 6;
-            public static final int CAN = 6;
+            public static final int DRIVE = 10;
+            public static final int CAN = 1;
         }
 
         class FrontRight {
             public static final int TURN = 5;
             public static final int DRIVE = 8;
-            public static final int CAN = 1;
+            public static final int CAN = 4;
         }
 
         class BackLeft {
