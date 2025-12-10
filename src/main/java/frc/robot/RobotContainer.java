@@ -4,6 +4,7 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.subsystems.shooter.ShooterSubsystem;
 import frc.robot.subsystems.swerve.SwerveSubsystem;
+import swervelib.SwerveDrive;
 
 public class RobotContainer {
   // Subsystems
@@ -21,10 +22,12 @@ public class RobotContainer {
     shooter = new ShooterSubsystem();
   }
 
+  public void teleopInit() {
+    scheduler.schedule(swerve.driveCommand(() -> -controller.getLeftY(), () -> -1 * controller.getLeftX(), () -> controller.getRightX()));
+  }
+
   public void teleopPeriodic() {
       if (swerve != null) {
-          scheduler.schedule(swerve.driveCommand(() -> -controller.getLeftY(), () -> controller.getLeftX(), () -> controller.getRightX()));
-
           if (controller.getXButtonPressed()) {
               scheduler.schedule(swerve.reZeroCommand());
           }

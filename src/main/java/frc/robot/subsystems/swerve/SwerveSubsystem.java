@@ -9,6 +9,8 @@ import java.util.function.DoubleSupplier;
 
 import edu.wpi.first.wpilibj.Filesystem;
 import swervelib.parser.SwerveParser;
+import swervelib.telemetry.SwerveDriveTelemetry;
+import swervelib.telemetry.SwerveDriveTelemetry.TelemetryVerbosity;
 import swervelib.SwerveDrive;
 import swervelib.math.SwerveMath;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -23,8 +25,10 @@ public class SwerveSubsystem extends SubsystemBase {
   public SwerveSubsystem() {
     try
     {
+      SwerveDriveTelemetry.verbosity = TelemetryVerbosity.HIGH;
       // TODO: Remove duplicate ID values, stored in both json and constants file
       swerveDrive = new SwerveParser(directory).createSwerveDrive(Constants.MAX_DRIVE_SPEED);
+      swerveDrive.useExternalFeedbackSensor();
     } catch (Exception e)
     {
       throw new RuntimeException(e);
@@ -90,7 +94,7 @@ public class SwerveSubsystem extends SubsystemBase {
 
   @Override
   public void periodic() {
-    // This method will be called once per scheduler run
+    swerveDrive.updateOdometry();
   }
 
   @Override
