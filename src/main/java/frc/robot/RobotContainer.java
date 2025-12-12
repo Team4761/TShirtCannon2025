@@ -23,7 +23,7 @@ public class RobotContainer {
   }
 
   public void teleopInit() {
-    scheduler.schedule(swerve.driveCommand(() -> -controller.getLeftY(), () -> -1 * controller.getLeftX(), () -> controller.getRightX()));
+    scheduler.schedule(swerve.driveCommand(() -> controller.getLeftY(), () -> controller.getLeftX(), () -> controller.getRightX()));
   }
 
   public void teleopPeriodic() {
