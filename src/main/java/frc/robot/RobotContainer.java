@@ -1,5 +1,6 @@
 package frc.robot;
 
+import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.subsystems.shooter.ShooterSubsystem;
@@ -9,8 +10,10 @@ import swervelib.SwerveDrive;
 public class RobotContainer {
   // Subsystems
   private final XboxController controller;
-  private final SwerveSubsystem swerve;
-  private final ShooterSubsystem shooter;
+  private final SlewRateLimiter xlimiter;
+  private final SlewRateLimiter ylimiter;
+  public final SwerveSubsystem swerve;
+  public final ShooterSubsystem shooter;
 
   // Internal
   private int currentModule = 0;
@@ -18,18 +21,28 @@ public class RobotContainer {
 
   public RobotContainer() {
     controller = new XboxController(0);
+    xlimiter = new SlewRateLimiter(10);
+    ylimiter = new SlewRateLimiter(10);
     swerve = new SwerveSubsystem();
     shooter = new ShooterSubsystem();
   }
 
   public void teleopInit() {
-    scheduler.schedule(swerve.driveCommand(() -> controller.getLeftY(), () -> controller.getLeftX(), () -> controller.getRightX()));
+    int multiplier = 2;
+    scheduler.schedule(swerve.driveCommand(() -> xlimiter.calculate(controller.getLeftY() * multiplier), () -> ylimiter.calculate(controller.getLeftX() * multiplier), () -> controller.getRightX()));
   }
 
   public void teleopPeriodic() {
       if (swerve != null) {
           if (controller.getXButtonPressed()) {
               scheduler.schedule(swerve.reZeroCommand());
+          }
+      }
+      if (shooter != null) {
+          if (controller.getAButton()) {
+              scheduler.schedule(shooter.setBarrelSpeed(0.2));
+          } else {
+              scheduler.schedule(shooter.setBarrelSpeed(0.0));
           }
       }
   }

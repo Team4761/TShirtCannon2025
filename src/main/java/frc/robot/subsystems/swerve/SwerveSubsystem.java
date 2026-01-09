@@ -65,7 +65,7 @@ public class SwerveSubsystem extends SubsystemBase {
                             translationX.getAsDouble() * swerveDrive.getMaximumChassisVelocity(),
                             translationY.getAsDouble() * swerveDrive.getMaximumChassisVelocity()),
                         angularRotationX.getAsDouble() * swerveDrive.getMaximumChassisAngularVelocity(),
-                        false,
+                        true,
                         false);
     });
   }
@@ -77,7 +77,7 @@ public class SwerveSubsystem extends SubsystemBase {
    * @return A command that, when executed, resets the gyro to zero.
    */
   public Command reZeroCommand() {
-    return run(() -> {
+    return runOnce(() -> {
       this.swerveDrive.zeroGyro();
     });
   }
