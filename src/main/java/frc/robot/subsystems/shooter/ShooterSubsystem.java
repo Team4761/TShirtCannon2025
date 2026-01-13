@@ -1,6 +1,11 @@
 package frc.robot.subsystems.shooter;
 
 import com.revrobotics.spark.SparkMax;
+import com.revrobotics.spark.config.ClosedLoopConfig.FeedbackSensor;
+import com.revrobotics.spark.config.SparkMaxConfig;
+import com.revrobotics.RelativeEncoder;
+import com.revrobotics.spark.SparkBase.ControlType;
+import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -8,7 +13,6 @@ import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
@@ -19,6 +23,7 @@ import frc.robot.Constants;
 public class ShooterSubsystem extends SubsystemBase {
 
     public static boolean activelyRotating = false;
+    private double angle = 0;
 
     // private static final double TURN_MOTOR_UNITS_TO_RADIANS = (2 * Math.PI) / Constants.SHOOTER_BARREL_TURN_MOTOR_RESOLUTION / Constants.SHOOTER_BARREL_GEAR_RATIO;
     // private static final double TURN_MOTOR_UNITS_TO_RADIANS = 1.0 / 40.0;
@@ -35,12 +40,29 @@ public class ShooterSubsystem extends SubsystemBase {
     private SparkMax pivotMotor;
     // Used to check when the barrel is in position.
     private DigitalInput barrelSwitch = null;
-
+    // The encoder of turnMotor (barrel rotation)
+    private RelativeEncoder turnMotorEncoder;
+    // The PID controller of the turnMotor (barrel rotation)
+    private SparkClosedLoopController testPIDController;
 
     public ShooterSubsystem() {
         solenoid = new Solenoid(PneumaticsModuleType.CTREPCM, Constants.SOLENOID_PORT);
         turnMotor = new SparkMax(Constants.SHOOTER_TURN_MOTOR_PORT, MotorType.kBrushless);
         pivotMotor = new SparkMax(Constants.SHOOTER_PIVOT_MOTOR_PORT, MotorType.kBrushless);
+
+        SparkMaxConfig config = new SparkMaxConfig();
+        config.closedLoop
+            .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
+            .pid(0.1, 0.0, 0.0)  // P, I, D
+            .outputRange(-0.3, 0.3);  // Max 30% speed
+
+        // Apply configuration to motor
+        turnMotor.configure(config, SparkMax.ResetMode.kResetSafeParameters, SparkMax.PersistMode.kNoPersistParameters);
+
+        this.turnMotorEncoder = turnMotor.getEncoder();
+        this.turnMotorEncoder.setPosition(0);
+
+        this.testPIDController = turnMotor.getClosedLoopController();
 
         // Previous values = 1.0 / 16.0 / 1.1
         // turnMotor.getEncoder().setPositionConversionFactor(TURN_MOTOR_UNITS_TO_RADIANS);
@@ -66,10 +88,9 @@ public class ShooterSubsystem extends SubsystemBase {
      * Opens and closes the solenoid.
      * @param state True to open the solenoid. False to close it.
      */
-    public Command setSolenoid(boolean state) {
-        return run(() -> {
-            solenoid.set(state);
-        });
+    public void setSolenoidState(boolean state) {
+        System.out.println("pew pew" + Boolean.toString(state));
+        solenoid.set(state);
     }
 
 
@@ -78,20 +99,22 @@ public class ShooterSubsystem extends SubsystemBase {
      * +speed = counter clock wise = rotate to the left
      * @param speed A number between -1 and 1 where 1 represents 100% speed where + = counterclock wise.
      */
-    public Command setBarrelSpeed(double speed) {
-        return run(() -> {
-            turnMotor.set(speed);
-            turnMotor.getPIDController().setReference(targetAngleDegrees, CANSparkMax.ControlType.kPosition);
-        });
+    public void setBarrelSpeed(double speed) {
+        turnMotor.set(speed);
     }
 
 
     /**
      * Sets the speed of the pivot of the barrel up and down.
-     * @param speed A number between -1 and 1 where 1 represents 100% speed and + = rotating the top of the barrel upwards.
+     * @param degrees A number between -360 and 360 in degrees
      */
-    public void pivotBarrel(double speed) {
-        pivotMotor.set(speed);
+    public void pivotBarrelDegrees(double degrees) {
+        this.angle = (degrees / 3.6 + this.angle) % 100;
+        testPIDController.setReference((degrees / 3.6 + this.angle) % 100, ControlType.kPosition);
+    }
+
+    public void stopPivotingBarrel() {
+        pivotMotor.set(0);
     }
 
 

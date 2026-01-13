@@ -1,34 +1,17 @@
 package frc.robot.subsystems.shooter;
 
-import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.Robot;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 
 /**
- * This will simply open up the solenoid and then close it after 0.2 seconds.
+ * Opens the solenoid briefly to fire, then closes it.
  */
-public class ShootCommand extends Command {
-    
-    // Will store when the command ends
-    private long endTime;
-
-    @Override
-    public void initialize() {
-        // Open the air flow
-        frc.robot.subsystems.shooter.ShooterSubsystem.setSolenoid(true);
-        // 0.2s after
-        endTime = System.currentTimeMillis() + 200;
-    }
-
-    @Override
-    public void end(boolean interrupted) {
-        // Close the air flow
-        Robot.map.shooter.setSolenoid(false);
-    }
-
-    @Override
-    public boolean isFinished() {
-        if (endTime <= System.currentTimeMillis())
-            return true;
-        return false;
+public class ShootCommand extends SequentialCommandGroup {
+    public ShootCommand() {
+        addCommands(
+            new SetShooterSolenoidCommand(true),
+            new WaitCommand(0.2),
+            new SetShooterSolenoidCommand(false)
+        );
     }
 }

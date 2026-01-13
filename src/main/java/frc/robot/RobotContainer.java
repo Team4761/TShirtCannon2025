@@ -3,7 +3,10 @@ package frc.robot;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.subsystems.shooter.PivotBarrelCommand;
+import frc.robot.subsystems.shooter.ShootCommand;
 import frc.robot.subsystems.shooter.ShooterSubsystem;
+import frc.robot.subsystems.shooter.StopPivotingBarrelCommand;
 import frc.robot.subsystems.swerve.SwerveSubsystem;
 import swervelib.SwerveDrive;
 
@@ -12,8 +15,8 @@ public class RobotContainer {
   private final XboxController controller;
   private final SlewRateLimiter xlimiter;
   private final SlewRateLimiter ylimiter;
-  public final SwerveSubsystem swerve;
-  public final ShooterSubsystem shooter;
+  public static final SwerveSubsystem swerve = new SwerveSubsystem();
+  public static final ShooterSubsystem shooter = new ShooterSubsystem();
 
   // Internal
   private int currentModule = 0;
@@ -23,8 +26,6 @@ public class RobotContainer {
     controller = new XboxController(0);
     xlimiter = new SlewRateLimiter(10);
     ylimiter = new SlewRateLimiter(10);
-    swerve = new SwerveSubsystem();
-    shooter = new ShooterSubsystem();
   }
 
   public void teleopInit() {
@@ -39,10 +40,14 @@ public class RobotContainer {
           }
       }
       if (shooter != null) {
-          if (controller.getAButton()) {
-              scheduler.schedule(shooter.setBarrelSpeed(0.2));
-          } else {
-              scheduler.schedule(shooter.setBarrelSpeed(0.0));
+          if (controller.getAButtonPressed()) {
+              System.out.println("A button pressed");
+              scheduler.schedule(new PivotBarrelCommand(45));
+          } else if (controller.getLeftBumperButtonPressed()) {
+            scheduler.schedule(new PivotBarrelCommand(15));
+          } else if (controller.getRightBumperButtonPressed()) {
+              System.out.println("Right bumper pressed");
+              scheduler.schedule(new ShootCommand());
           }
       }
   }
@@ -63,13 +68,5 @@ public class RobotContainer {
         // TODO: Spin single motor
         // TODO: Display current module stats on smart dashboard
     }
-  }
-
-  public SwerveSubsystem getSwerve() {
-    return swerve;
-  }
-
-  public ShooterSubsystem getShooter() {
-    return shooter;
   }
 }
