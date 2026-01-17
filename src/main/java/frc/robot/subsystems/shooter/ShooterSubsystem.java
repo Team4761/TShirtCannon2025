@@ -54,7 +54,7 @@ public class ShooterSubsystem extends SubsystemBase {
         config.closedLoop
             .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
             .pid(0.1, 0.0, 0.0)  // P, I, D
-            .outputRange(-0.3, 0.3);  // Max 30% speed
+            .outputRange(-0.7, 0.7);  // Max 30% speed
 
         // Apply configuration to motor
         turnMotor.configure(config, SparkMax.ResetMode.kResetSafeParameters, SparkMax.PersistMode.kNoPersistParameters);
@@ -89,7 +89,7 @@ public class ShooterSubsystem extends SubsystemBase {
      * @param state True to open the solenoid. False to close it.
      */
     public void setSolenoidState(boolean state) {
-        System.out.println("pew pew" + Boolean.toString(state));
+        System.out.println("pew pew " + Boolean.toString(state));
         solenoid.set(state);
     }
 

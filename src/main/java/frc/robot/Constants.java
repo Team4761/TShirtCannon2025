@@ -6,7 +6,7 @@ import edu.wpi.first.math.util.Units;
 public class Constants {
     
     // Controller
-    public static final int CONTROLLER_PORT = 0;    // Port on the Driverstation
+    public static final int CONTROLLER_PORT = 0; // Port on the Driverstation
 
 
     // Swerve
@@ -34,6 +34,10 @@ public class Constants {
             public static final int DRIVE = 4;
             public static final int CAN = 2;
         }
+    }
+
+    class Vision {
+        public static final String CAMERA_NAME = "good cam";
     }
 
     public static final double WHEEL_RADIUS = 0.04995d;             // WIP in meters
