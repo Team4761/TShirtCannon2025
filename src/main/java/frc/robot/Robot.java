@@ -29,11 +29,18 @@ public class Robot extends TimedRobot {
    * SmartDashboard integrated updating.
    */
   @Override
-  public void robotPeriodic() {}
+  public void robotPeriodic() {
+    CommandScheduler.getInstance().run();
+  }
 
   /** This function is called once when autonomous is enabled. */
   @Override
-  public void autonomousInit() {}
+  public void autonomousInit() {
+    // autonomousCommand = robotContainer.getAutonomousCommand();
+    // if (autonomousCommand != null) {
+    //   autonomousCommand.schedule();
+    // }
+  }
 
   /** This function is called periodically during autonomous. */
   @Override
@@ -42,15 +49,15 @@ public class Robot extends TimedRobot {
   /** This function is called once when teleop is enabled. */
   @Override
   public void teleopInit() {
-    robotContainer.teleopInit();
+    // if (autonomousCommand != null) {
+    //   autonomousCommand.cancel();
+    //   autonomousCommand = null;
+    // }
   }
 
   /** This function is called periodically during operator control. */
   @Override
-  public void teleopPeriodic() {
-    CommandScheduler.getInstance().run();
-    robotContainer.teleopPeriodic();
-  }
+  public void teleopPeriodic() {}
 
   /** This function is called once when the robot is disabled. */
   @Override
@@ -63,14 +70,13 @@ public class Robot extends TimedRobot {
 
   /** This function is called once when test mode is enabled. */
   @Override
-  public void testInit() {}
+  public void testInit() {
+    CommandScheduler.getInstance().cancelAll();
+  }
 
   /** This function is called periodically during test mode. */
   @Override
-  public void testPeriodic() {
-    CommandScheduler.getInstance().run();
-    robotContainer.testPeriodic();
-  }
+  public void testPeriodic() {}
 
   /** This function is called once when the robot is first started up. */
   @Override

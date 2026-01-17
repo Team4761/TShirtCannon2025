@@ -1,72 +1,67 @@
 package frc.robot;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.filter.SlewRateLimiter;
-import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.subsystems.shooter.PivotBarrelCommand;
 import frc.robot.subsystems.shooter.ShootCommand;
 import frc.robot.subsystems.shooter.ShooterSubsystem;
 import frc.robot.subsystems.shooter.StopPivotingBarrelCommand;
 import frc.robot.subsystems.swerve.SwerveSubsystem;
+import frc.robot.subsystems.vision.VisionSubsystem;
 import swervelib.SwerveDrive;
 
 public class RobotContainer {
   // Subsystems
-  private final XboxController controller;
+  private final CommandXboxController controller;
   private final SlewRateLimiter xlimiter;
   private final SlewRateLimiter ylimiter;
-  public static final SwerveSubsystem swerve = new SwerveSubsystem();
-  public static final ShooterSubsystem shooter = new ShooterSubsystem();
-
-  // Internal
-  private int currentModule = 0;
-  private final CommandScheduler scheduler = CommandScheduler.getInstance();
+  private static final SwerveSubsystem swerve = new SwerveSubsystem();
+  private static final ShooterSubsystem shooter = new ShooterSubsystem();
+  private static final VisionSubsystem vision = new VisionSubsystem();
 
   public RobotContainer() {
-    controller = new XboxController(0);
+    controller = new CommandXboxController(Constants.CONTROLLER_PORT);
     xlimiter = new SlewRateLimiter(10);
     ylimiter = new SlewRateLimiter(10);
+
+    configBindings();
+    configDefaultCmds();
   }
 
-  public void teleopInit() {
+  public void configDefaultCmds() {
     int multiplier = 2;
-    scheduler.schedule(swerve.driveCommand(() -> xlimiter.calculate(controller.getLeftY() * multiplier), () -> ylimiter.calculate(controller.getLeftX() * multiplier), () -> controller.getRightX()));
+    swerve.setDefaultCommand(
+                swerve.driveCommand(
+                        () -> xlimiter.calculate(MathUtil.applyDeadband(controller.getLeftY(), 0.08) * multiplier),
+                        () -> ylimiter.calculate(MathUtil.applyDeadband(controller.getLeftX(), 0.08) * multiplier),
+                        () -> MathUtil.applyDeadband(controller.getRightX(), 0.08)
+                )
+        );
   }
 
-  public void teleopPeriodic() {
-      if (swerve != null) {
-          if (controller.getXButtonPressed()) {
-              scheduler.schedule(swerve.reZeroCommand());
-          }
-      }
-      if (shooter != null) {
-          if (controller.getAButtonPressed()) {
-              System.out.println("A button pressed");
-              scheduler.schedule(new PivotBarrelCommand(45));
-          } else if (controller.getLeftBumperButtonPressed()) {
-            scheduler.schedule(new PivotBarrelCommand(15));
-          } else if (controller.getRightBumperButtonPressed()) {
-              System.out.println("Right bumper pressed");
-              scheduler.schedule(new ShootCommand());
-          }
-      }
-  }
-
-  /**
-   * Must be called from testPeriodic() method in Robot.java
-  */
-  public void testPeriodic() {
-    // Motor selection
-    if (controller.getLeftBumperButton()) {
-        currentModule = (currentModule - 1) % 4;
-    }
-    if (controller.getRightBumperButton()) {
-        currentModule = (currentModule + 1) % 4;
-    }
-
+  private void configBindings() {
     if (swerve != null) {
-        // TODO: Spin single motor
-        // TODO: Display current module stats on smart dashboard
+      // Reset 'forwards' direction of robot when in operator relative mode
+      controller.x().onTrue(swerve.reZeroCommand());
+    }
+
+    if (shooter != null) {
+      // Reload left or right
+      controller.rightTrigger().onTrue(new PivotBarrelCommand(shooter, 45));
+      controller.leftTrigger().onTrue(new PivotBarrelCommand(shooter, -45));
+
+      // Slightly adjust left or right
+      controller.leftBumper().onTrue(new PivotBarrelCommand(shooter, -5));
+      controller.rightBumper().onTrue(new PivotBarrelCommand(shooter, 5));
+
+      // Fire the cannon
+      controller.a().onTrue(new ShootCommand(shooter));
     }
   }
+
+  public static ShooterSubsystem shooter() { return shooter; }
+  public static SwerveSubsystem swerve() { return swerve; }
+  public static VisionSubsystem visionSubsystem() { return vision; }
 }
