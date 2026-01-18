@@ -108,7 +108,7 @@ public class ShooterSubsystem extends SubsystemBase {
      * Sets the speed of the pivot of the barrel up and down.
      * @param degrees A number between -360 and 360 in degrees
      */
-    public void pivotBarrelDegrees(double degrees) {
+    public void   pivotBarrelDegrees(double degrees) {
         this.angle = (degrees / 3.6 + this.angle) % 100;
         testPIDController.setReference((degrees / 3.6 + this.angle) % 100, ControlType.kPosition);
     }

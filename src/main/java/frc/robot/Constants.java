@@ -10,34 +10,42 @@ public class Constants {
 
 
     // Swerve
-    class Modules {
-        class FrontLeft {
+    public class Modules {
+        public class FrontLeft {
             public static final int TURN = 6;
             public static final int DRIVE = 10;
             public static final int CAN = 1;
         }
 
-        class FrontRight {
+        public class FrontRight {
             public static final int TURN = 5;
             public static final int DRIVE = 8;
             public static final int CAN = 4;
         }
 
-        class BackLeft {
+        public class BackLeft {
             public static final int TURN = 7;
             public static final int DRIVE = 9;
             public static final int CAN = 3;
         }
 
-        class BackRight {
+        public class BackRight {
             public static final int TURN = 30;
             public static final int DRIVE = 4;
             public static final int CAN = 2;
         }
     }
 
-    class Vision {
+    public class Vision {
         public static final String CAMERA_NAME = "good cam";
+        
+        public static final double ANGLE_DEADBAND = 2.00; // Degrees
+        public static final double ANGLE_CONVERSION_FACTOR = .04; // 1/25
+        
+        public static final double FOLLOW_SPEED = 0.5; // Meters :P
+        public static final double BACKUP_DIST = .7; // Meters
+
+        public static final double DISTANCE_CONVERSION_FACTOR = 0.333; // 1/3
     }
 
     public static final double WHEEL_RADIUS = 0.04995d;             // WIP in meters
