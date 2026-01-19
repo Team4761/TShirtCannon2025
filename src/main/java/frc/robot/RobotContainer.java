@@ -3,9 +3,10 @@ package frc.robot;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import frc.robot.subsystems.shooter.PivotBarrelCommand;
+import frc.robot.subsystems.shooter.PitchBarrelDegreesCommand;
 import frc.robot.subsystems.shooter.ShootCommand;
 import frc.robot.subsystems.shooter.ShooterSubsystem;
+import frc.robot.subsystems.shooter.rollBarrelDegreesCommand;
 import frc.robot.subsystems.swerve.SwerveSubsystem;
 import frc.robot.subsystems.vision.DisenableTrackerCommand;
 import frc.robot.subsystems.vision.VisionSubsystem;
@@ -59,15 +60,16 @@ public class RobotContainer {
 
     if (shooter != null) {
       // Reload left or right
-      controller.rightTrigger().onTrue(new PivotBarrelCommand(shooter, 45));
-      controller.leftTrigger().onTrue(new PivotBarrelCommand(shooter, -45));
+      controller.rightTrigger().onTrue(new rollBarrelDegreesCommand(shooter, 45));
+      controller.leftTrigger().onTrue(new rollBarrelDegreesCommand(shooter, -45));
 
       // Slightly adjust left or right
-      controller.leftBumper().onTrue(new PivotBarrelCommand(shooter, -5));
-      controller.rightBumper().onTrue(new PivotBarrelCommand(shooter, 5));
+      controller.leftBumper().onTrue(new rollBarrelDegreesCommand(shooter, -5));
+      controller.rightBumper().onTrue(new rollBarrelDegreesCommand(shooter, 5));
 
       // Aim cannon up/down
-      
+      controller.povUp().onTrue(new PitchBarrelDegreesCommand(shooter, 5));
+      controller.povDown().onTrue(new PitchBarrelDegreesCommand(shooter, 0));
 
       // Fire the cannon
       controller.a().onTrue(new ShootCommand(shooter));
