@@ -66,6 +66,9 @@ public class RobotContainer {
       controller.leftBumper().onTrue(new PivotBarrelCommand(shooter, -5));
       controller.rightBumper().onTrue(new PivotBarrelCommand(shooter, 5));
 
+      // Aim cannon up/down
+      
+
       // Fire the cannon
       controller.a().onTrue(new ShootCommand(shooter));
     }

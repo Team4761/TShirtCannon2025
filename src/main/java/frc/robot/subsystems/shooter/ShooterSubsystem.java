@@ -1,11 +1,5 @@
 package frc.robot.subsystems.shooter;
 
-import com.revrobotics.spark.SparkMax;
-import com.revrobotics.spark.config.ClosedLoopConfig.FeedbackSensor;
-import com.revrobotics.spark.config.SparkMaxConfig;
-import com.revrobotics.RelativeEncoder;
-import com.revrobotics.spark.SparkBase.ControlType;
-import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -15,60 +9,40 @@ import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.util.SmartMotor;
 
 /**
  * Has a motor (NEO) for turning the barrel and a solenoid to shoot.
  * There is also a switch that tells the code when the barrel has rotated.
  */
 public class ShooterSubsystem extends SubsystemBase {
-
     public static boolean activelyRotating = false;
-    private double angle = 0;
-
-    // private static final double TURN_MOTOR_UNITS_TO_RADIANS = (2 * Math.PI) / Constants.SHOOTER_BARREL_TURN_MOTOR_RESOLUTION / Constants.SHOOTER_BARREL_GEAR_RATIO;
-    // private static final double TURN_MOTOR_UNITS_TO_RADIANS = 1.0 / 40.0;
-    private static final double TURN_MOTOR_UNITS_TO_RADIANS = (Math.PI * 2.0) / 106.0;
-    private static final double PIVOT_MOTOR_TO_RADIANS = (2 * Math.PI) / Constants.SHOOTER_PIVOT_MOTOR_RESOLUTION / Constants.SHOOTER_PIVOT_GEAR_RATIO;
-
     public static final boolean HAS_SWITCH = false;
     
-    // Used to open/close the air flow in the barrel
     private Solenoid solenoid;
-    // Used to rotate the barrel.
-    private SparkMax turnMotor;
-    // Used to pivot/angle the barrel up and down where + is up
-    private SparkMax pivotMotor;
-    // Used to check when the barrel is in position.
-    private DigitalInput barrelSwitch = null;
-    // The encoder of turnMotor (barrel rotation)
-    private RelativeEncoder turnMotorEncoder;
-    // The PID controller of the turnMotor (barrel rotation)
-    private SparkClosedLoopController testPIDController;
-
+    private SmartMotor rollMotor;
+    private SmartMotor pitchMotor;
+    private DigitalInput barrelSwitch;
+    
     public ShooterSubsystem() {
         solenoid = new Solenoid(PneumaticsModuleType.CTREPCM, Constants.SOLENOID_PORT);
-        turnMotor = new SparkMax(Constants.SHOOTER_TURN_MOTOR_PORT, MotorType.kBrushless);
-        pivotMotor = new SparkMax(Constants.SHOOTER_PIVOT_MOTOR_PORT, MotorType.kBrushless);
-
-        SparkMaxConfig config = new SparkMaxConfig();
-        config.closedLoop
-            .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
-            .pid(0.1, 0.0, 0.0)  // P, I, D
-            .outputRange(-0.7, 0.7);  // Max 30% speed
-
-        // Apply configuration to motor
-        turnMotor.configure(config, SparkMax.ResetMode.kResetSafeParameters, SparkMax.PersistMode.kNoPersistParameters);
-
-        this.turnMotorEncoder = turnMotor.getEncoder();
-        this.turnMotorEncoder.setPosition(0);
-
-        this.testPIDController = turnMotor.getClosedLoopController();
-
-        // Previous values = 1.0 / 16.0 / 1.1
-        // turnMotor.getEncoder().setPositionConversionFactor(TURN_MOTOR_UNITS_TO_RADIANS);
+        rollMotor = SmartMotor.Builder.newInstance()
+                        .port(Constants.SHOOTER_TURN_MOTOR_PORT)
+                        .motorType(MotorType.kBrushless)
+                        .PID(0.1, 0, 0)
+                        .outputRange(-0.7, 0.7)
+                        .angleLimits(-1, -1)
+                        .build();
+        pitchMotor = SmartMotor.Builder.newInstance()
+                        .port(Constants.SHOOTER_PIVOT_MOTOR_PORT)
+                        .motorType(MotorType.kBrushless)
+                        .PID(0.1, 0, 0)
+                        .outputRange(-0.7, 0.7)
+                        .angleLimits(-1, -1)
+                        .build();
 
         if (HAS_SWITCH)
-            barrelSwitch = new DigitalInput(Constants.SHOOTER_BARREL_SWITCH_PORT);
+            this.barrelSwitch = new DigitalInput(Constants.SHOOTER_BARREL_SWITCH_PORT);
     }
 
 
@@ -77,10 +51,8 @@ public class ShooterSubsystem extends SubsystemBase {
      */
     @Override
     public void periodic() {
-        SmartDashboard.putNumber("Barrel Rotation", getBarrelRotation().getDegrees());
-        SmartDashboard.putNumber("Barrel Pivot", getBarrelPivot().getDegrees());
-        SmartDashboard.putNumber("RELATIVE Barrel Rotation", turnMotor.getEncoder().getPosition());
-        SmartDashboard.putNumber("ABSOLUTE Barrel Rotation", turnMotor.getAbsoluteEncoder().getPosition());
+        SmartDashboard.putNumber("Barrel Pitch", pitchMotor.getAngle());
+        SmartDashboard.putNumber("Barrel Rotation", rollMotor.getAngle());
     }
 
 
@@ -89,7 +61,6 @@ public class ShooterSubsystem extends SubsystemBase {
      * @param state True to open the solenoid. False to close it.
      */
     public void setSolenoidState(boolean state) {
-        System.out.println("pew pew " + Boolean.toString(state));
         solenoid.set(state);
     }
 
@@ -99,22 +70,48 @@ public class ShooterSubsystem extends SubsystemBase {
      * +speed = counter clock wise = rotate to the left
      * @param speed A number between -1 and 1 where 1 represents 100% speed where + = counterclock wise.
      */
-    public void setBarrelSpeed(double speed) {
-        turnMotor.set(speed);
+    public void setBarrelRollSpeed(double speed) {
+        rollMotor.setSpeed(speed);
+    }
+
+    /**
+     * Sets the speed of the pivot of the barrel up and down.
+     * +speed = up
+     * @param speed A number between -1 and 1 where 1 represents 100% speed where + = up.
+     */
+    public void setBarrelPitchSpeed(double speed) {
+        pitchMotor.setSpeed(speed);
     }
 
 
     /**
-     * Sets the speed of the pivot of the barrel up and down.
+     * Rotates the barrel in roll by the specified number of degrees.
      * @param degrees A number between -360 and 360 in degrees
      */
-    public void   pivotBarrelDegrees(double degrees) {
-        this.angle = (degrees / 3.6 + this.angle) % 100;
-        testPIDController.setReference((degrees / 3.6 + this.angle) % 100, ControlType.kPosition);
+    public void rollBarrelDegrees(double degrees) {
+        this.rollMotor.turn(degrees);
     }
 
-    public void stopPivotingBarrel() {
-        pivotMotor.set(0);
+    /**
+     * Rotates the barrel in pitch by the specified number of degrees.
+     * @param degrees A number between -360 and 360 in degrees.
+     */
+    public void pitchBarrelDegrees(double degrees) {
+        this.pitchMotor.turn(degrees);
+    }
+
+    /**
+     * Stops barrel roll movement when using closed-loop turning.
+     */
+    public void stopRollingBarrel() {
+        this.rollMotor.stopTurning();
+    }
+
+    /**
+     * Stops barrel pitch movement when using closed-loop turning.
+     */
+    public void stopPitchingBarrel() {
+        this.pitchMotor.stopTurning();
     }
 
 
@@ -122,17 +119,17 @@ public class ShooterSubsystem extends SubsystemBase {
      * By using the encoder units of the NEO, this gets the current rotation of the barrel.
      * @return The current rotation of the barrel after converting from encoder units to rotation where + = counterclock wise
      */
-    public Rotation2d getBarrelRotation() {
-        return new Rotation2d(turnMotor.getEncoder().getPosition());
+    public Rotation2d getBarrelRollRotation() {
+        return new Rotation2d(Math.toRadians(rollMotor.getAngle()));
     }
 
 
     /**
      * By using the encoder units of the NEO, this gets the current pivot of the barrel.
-     * @return The current pivot of the barrel after converting from encoder units to rotation where + = upwards.
+     * @return The current pivot of the barrel after converting from encoder units to rotation where + ~> upwards.
      */
-    public Rotation2d getBarrelPivot() {
-        return new Rotation2d(pivotMotor.getEncoder().getPosition() * PIVOT_MOTOR_TO_RADIANS);
+    public Rotation2d getBarrelPitchRotation() {
+        return new Rotation2d(Math.toRadians(pitchMotor.getAngle()));
     }
 
 
@@ -142,6 +139,6 @@ public class ShooterSubsystem extends SubsystemBase {
      * @return True if the barrel is lined up. False if it is not.
      */
     public boolean getSwitchState() {
-        return barrelSwitch.get();
+        return this.barrelSwitch.get();
     }
 }
