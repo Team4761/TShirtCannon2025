@@ -6,7 +6,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.subsystems.shooter.PitchBarrelDegreesCommand;
 import frc.robot.subsystems.shooter.ShootCommand;
 import frc.robot.subsystems.shooter.ShooterSubsystem;
-import frc.robot.subsystems.shooter.rollBarrelDegreesCommand;
+import frc.robot.subsystems.shooter.RollBarrelDegreesCommand;
 import frc.robot.subsystems.swerve.SwerveSubsystem;
 import frc.robot.subsystems.vision.DisenableTrackerCommand;
 import frc.robot.subsystems.vision.VisionSubsystem;
@@ -37,17 +37,17 @@ public class RobotContainer {
         swerve.setDefaultCommand(
                 swerve.driveCommand(
                         () -> xlimiter.calculate(
-                                                    MathUtil.applyDeadband(controller.getLeftY(), 0.08) 
-                                                    * multiplier 
-                                                    + ((vision.isTracking() ? 1 : 0) 
-                                                            * (vision.getAdjustedDistToAprilCode() / Math.abs(vision.getAdjustedDistToAprilCode()))
-                                                            * Constants.Vision.FOLLOW_SPEED)),
+                            MathUtil.applyDeadband(controller.getLeftY(), 0.08) 
+                            * multiplier 
+                            + ((vision.isTracking() ? 1 : 0) 
+                                * (vision.getAdjustedDistToAprilCode() / Math.abs(vision.getAdjustedDistToAprilCode()))
+                                * Constants.Vision.FOLLOW_SPEED)),
                         () -> ylimiter.calculate(MathUtil.applyDeadband(controller.getLeftX(), 0.08) * multiplier),
                         () -> MathUtil.applyDeadband(
-                                                    controller.getRightX() 
-                                                    + ((vision.isTracking() ? 1 : 0) 
-                                                            * vision.getAngleToAprilCode()
-                                                            * Constants.Vision.ANGLE_CONVERSION_FACTOR), 0.08)
+                            controller.getRightX() 
+                            + ((vision.isTracking() ? 1 : 0) 
+                                * vision.getAngleToAprilCode()
+                                * Constants.Vision.ANGLE_CONVERSION_FACTOR), 0.08)
                 )
         );
     }
@@ -60,12 +60,12 @@ public class RobotContainer {
 
         if (shooter != null) {
             // Reload left or right
-            controller.rightTrigger().onTrue(new rollBarrelDegreesCommand(shooter, 45));
-            controller.leftTrigger().onTrue(new rollBarrelDegreesCommand(shooter, -45));
+            controller.rightTrigger().onTrue(new RollBarrelDegreesCommand(shooter, 45));
+            controller.leftTrigger().onTrue(new RollBarrelDegreesCommand(shooter, -45));
 
             // Slightly adjust left or right
-            controller.leftBumper().onTrue(new rollBarrelDegreesCommand(shooter, -5));
-            controller.rightBumper().onTrue(new rollBarrelDegreesCommand(shooter, 5));
+            controller.leftBumper().onTrue(new RollBarrelDegreesCommand(shooter, -5));
+            controller.rightBumper().onTrue(new RollBarrelDegreesCommand(shooter, 5));
 
             // Aim cannon up/down
             controller.povUp().onTrue(new PitchBarrelDegreesCommand(shooter, 5));
