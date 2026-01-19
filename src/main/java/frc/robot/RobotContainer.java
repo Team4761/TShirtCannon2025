@@ -69,7 +69,7 @@ public class RobotContainer {
 
             // Aim cannon up/down
             controller.povUp().onTrue(new PitchBarrelDegreesCommand(shooter, 5));
-            controller.povDown().onTrue(new PitchBarrelDegreesCommand(shooter, 0));
+            controller.povDown().onTrue(new PitchBarrelDegreesCommand(shooter, -5));
 
             // Fire the cannon
             controller.a().onTrue(new ShootCommand(shooter));
