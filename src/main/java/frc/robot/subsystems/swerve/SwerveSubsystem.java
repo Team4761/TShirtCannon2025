@@ -17,88 +17,88 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.util.Units;
 
 public class SwerveSubsystem extends SubsystemBase {
-  double maximumSpeed = Units.feetToMeters(4.5);
-  File directory = new File(Filesystem.getDeployDirectory(),"swerve");
-  SwerveDrive swerveDrive;
+    double maximumSpeed = Units.feetToMeters(4.5);
+    File directory = new File(Filesystem.getDeployDirectory(),"swerve");
+    SwerveDrive swerveDrive;
 
-  /** Creates a new ExampleSubsystem. */
-  public SwerveSubsystem() {
-    try
-    {
-      SwerveDriveTelemetry.verbosity = TelemetryVerbosity.HIGH;
-      // TODO: Remove duplicate ID values, stored in both json and constants file
-      swerveDrive = new SwerveParser(directory).createSwerveDrive(Constants.MAX_DRIVE_SPEED);
-      swerveDrive.useExternalFeedbackSensor();
-    } catch (Exception e)
-    {
-      throw new RuntimeException(e);
+    /** Creates a new ExampleSubsystem. */
+    public SwerveSubsystem() {
+        try
+        {
+            SwerveDriveTelemetry.verbosity = TelemetryVerbosity.HIGH;
+            // TODO: Remove duplicate ID values, stored in both json and constants file
+            swerveDrive = new SwerveParser(directory).createSwerveDrive(Constants.MAX_DRIVE_SPEED);
+            swerveDrive.useExternalFeedbackSensor();
+        } catch (Exception e)
+        {
+            throw new RuntimeException(e);
+        }
     }
-  }
 
-  /**
-   * Example command factory method.
-   *
-   * @return a command
-   */
-  public Command exampleMethodCommand() {
-    // Inline construction of command goes here.
-    // Subsystem::RunOnce implicitly requires `this` subsystem.
-    return runOnce(
-        () -> {
-          /* one-time action goes here */
+    /**
+     * Example command factory method.
+     *
+     * @return a command
+     */
+    public Command exampleMethodCommand() {
+        // Inline construction of command goes here.
+        // Subsystem::RunOnce implicitly requires `this` subsystem.
+        return runOnce(
+                () -> {
+                    /* one-time action goes here */
+                });
+    }
+
+    /**
+     * Command to drive the robot using translative values and heading as angular velocity.
+     *
+     * @param translationX  Translation in the X direction.
+     * @param translationY  Translation in the Y direction.
+     * @param angularRotationX Rotation of the robot to set
+     * @return Drive command.
+     */
+    public Command driveCommand(DoubleSupplier translationX, DoubleSupplier translationY, DoubleSupplier angularRotationX)
+    {
+        return run(() -> {
+            // Make the robot move
+            swerveDrive.drive(new Translation2d(
+                translationX.getAsDouble() * swerveDrive.getMaximumChassisVelocity(),
+                translationY.getAsDouble() * swerveDrive.getMaximumChassisVelocity()),
+                angularRotationX.getAsDouble() * swerveDrive.getMaximumChassisAngularVelocity(),
+                false,
+                false);
         });
-  }
+    }
 
-  /**
-   * Command to drive the robot using translative values and heading as angular velocity.
-   *
-   * @param translationX     Translation in the X direction.
-   * @param translationY     Translation in the Y direction.
-   * @param angularRotationX Rotation of the robot to set
-   * @return Drive command.
-   */
-  public Command driveCommand(DoubleSupplier translationX, DoubleSupplier translationY, DoubleSupplier angularRotationX)
-  {
-    return run(() -> {
-      // Make the robot move
-      swerveDrive.drive(new Translation2d(
-                            translationX.getAsDouble() * swerveDrive.getMaximumChassisVelocity(),
-                            translationY.getAsDouble() * swerveDrive.getMaximumChassisVelocity()),
-                        angularRotationX.getAsDouble() * swerveDrive.getMaximumChassisAngularVelocity(),
-                        false,
-                        false);
-    });
-  }
+    /**
+     * Creates a command to reset the gyro of the swerve drive to zero.
+     * This is useful for recalibrating the robot's orientation during a match.
+     *
+     * @return A command that, when executed, resets the gyro to zero.
+     */
+    public Command reZeroCommand() {
+        return runOnce(() -> {
+            this.swerveDrive.zeroGyro();
+        });
+    }
 
-  /**
-   * Creates a command to reset the gyro of the swerve drive to zero.
-   * This is useful for recalibrating the robot's orientation during a match.
-   *
-   * @return A command that, when executed, resets the gyro to zero.
-   */
-  public Command reZeroCommand() {
-    return runOnce(() -> {
-      this.swerveDrive.zeroGyro();
-    });
-  }
+    /**
+     * An example method querying a boolean state of the subsystem (for example, a digital sensor).
+     *
+     * @return value of some boolean subsystem state, such as a digital sensor.
+     */
+    public boolean exampleCondition() {
+        // Query some boolean state, such as a digital sensor.
+        return false;
+    }
 
-  /**
-   * An example method querying a boolean state of the subsystem (for example, a digital sensor).
-   *
-   * @return value of some boolean subsystem state, such as a digital sensor.
-   */
-  public boolean exampleCondition() {
-    // Query some boolean state, such as a digital sensor.
-    return false;
-  }
+    @Override
+    public void periodic() {
+        swerveDrive.updateOdometry();
+    }
 
-  @Override
-  public void periodic() {
-    swerveDrive.updateOdometry();
-  }
-
-  @Override
-  public void simulationPeriodic() {
-    // This method will be called once per scheduler run during simulation
-  }
+    @Override
+    public void simulationPeriodic() {
+        // This method will be called once per scheduler run during simulation
+    }
 }

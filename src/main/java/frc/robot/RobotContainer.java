@@ -12,76 +12,76 @@ import frc.robot.subsystems.vision.DisenableTrackerCommand;
 import frc.robot.subsystems.vision.VisionSubsystem;
 
 public class RobotContainer {
-  // Subsystems
-  private final CommandXboxController controller;
+    // Subsystems
+    private final CommandXboxController controller;
 
-  private final SlewRateLimiter xlimiter;
-  private final SlewRateLimiter ylimiter;
-  private static final SwerveSubsystem swerve = new SwerveSubsystem();
+    private final SlewRateLimiter xlimiter;
+    private final SlewRateLimiter ylimiter;
+    private static final SwerveSubsystem swerve = new SwerveSubsystem();
 
-  private static final ShooterSubsystem shooter = new ShooterSubsystem();
+    private static final ShooterSubsystem shooter = new ShooterSubsystem();
 
-  private static final VisionSubsystem vision = new VisionSubsystem();
+    private static final VisionSubsystem vision = new VisionSubsystem();
 
-  public RobotContainer() {
-    controller = new CommandXboxController(Constants.CONTROLLER_PORT);
-    xlimiter = new SlewRateLimiter(10);
-    ylimiter = new SlewRateLimiter(10);
+    public RobotContainer() {
+        controller = new CommandXboxController(Constants.CONTROLLER_PORT);
+        xlimiter = new SlewRateLimiter(10);
+        ylimiter = new SlewRateLimiter(10);
 
-    configBindings();
-    configDefaultCmds();
-  }
-
-  public void configDefaultCmds() {
-    int multiplier = 2;
-    swerve.setDefaultCommand(
-        swerve.driveCommand(
-            () -> xlimiter.calculate(
-                          MathUtil.applyDeadband(controller.getLeftY(), 0.08) 
-                          * multiplier 
-                          + ((vision.isTracking() ? 1 : 0) 
-                              * (vision.getAdjustedDistToAprilCode() / Math.abs(vision.getAdjustedDistToAprilCode()))
-                              * Constants.Vision.FOLLOW_SPEED)),
-            () -> ylimiter.calculate(MathUtil.applyDeadband(controller.getLeftX(), 0.08) * multiplier),
-            () -> MathUtil.applyDeadband(
-                          controller.getRightX() 
-                          + ((vision.isTracking() ? 1 : 0) 
-                              * vision.getAngleToAprilCode()
-                              * Constants.Vision.ANGLE_CONVERSION_FACTOR), 0.08)
-        )
-    );
-  }
-
-  private void configBindings() {
-    if (swerve != null) {
-      // Reset 'forwards' direction of robot when in operator relative mode
-      controller.x().onTrue(swerve.reZeroCommand());
+        configBindings();
+        configDefaultCmds();
     }
 
-    if (shooter != null) {
-      // Reload left or right
-      controller.rightTrigger().onTrue(new rollBarrelDegreesCommand(shooter, 45));
-      controller.leftTrigger().onTrue(new rollBarrelDegreesCommand(shooter, -45));
-
-      // Slightly adjust left or right
-      controller.leftBumper().onTrue(new rollBarrelDegreesCommand(shooter, -5));
-      controller.rightBumper().onTrue(new rollBarrelDegreesCommand(shooter, 5));
-
-      // Aim cannon up/down
-      controller.povUp().onTrue(new PitchBarrelDegreesCommand(shooter, 5));
-      controller.povDown().onTrue(new PitchBarrelDegreesCommand(shooter, 0));
-
-      // Fire the cannon
-      controller.a().onTrue(new ShootCommand(shooter));
+    public void configDefaultCmds() {
+        int multiplier = 2;
+        swerve.setDefaultCommand(
+                swerve.driveCommand(
+                        () -> xlimiter.calculate(
+                                                    MathUtil.applyDeadband(controller.getLeftY(), 0.08) 
+                                                    * multiplier 
+                                                    + ((vision.isTracking() ? 1 : 0) 
+                                                            * (vision.getAdjustedDistToAprilCode() / Math.abs(vision.getAdjustedDistToAprilCode()))
+                                                            * Constants.Vision.FOLLOW_SPEED)),
+                        () -> ylimiter.calculate(MathUtil.applyDeadband(controller.getLeftX(), 0.08) * multiplier),
+                        () -> MathUtil.applyDeadband(
+                                                    controller.getRightX() 
+                                                    + ((vision.isTracking() ? 1 : 0) 
+                                                            * vision.getAngleToAprilCode()
+                                                            * Constants.Vision.ANGLE_CONVERSION_FACTOR), 0.08)
+                )
+        );
     }
 
-    if (vision != null) {
-      // Tracking
-      controller.b().onTrue(new DisenableTrackerCommand(vision));
-    }
-  }
+    private void configBindings() {
+        if (swerve != null) {
+            // Reset 'forwards' direction of robot when in operator relative mode
+            controller.x().onTrue(swerve.reZeroCommand());
+        }
 
-  public static ShooterSubsystem shooter() { return shooter; }
-  public static SwerveSubsystem swerve() { return swerve; }
-  public static VisionSubsystem visionSubsystem() { return vision; }
+        if (shooter != null) {
+            // Reload left or right
+            controller.rightTrigger().onTrue(new rollBarrelDegreesCommand(shooter, 45));
+            controller.leftTrigger().onTrue(new rollBarrelDegreesCommand(shooter, -45));
+
+            // Slightly adjust left or right
+            controller.leftBumper().onTrue(new rollBarrelDegreesCommand(shooter, -5));
+            controller.rightBumper().onTrue(new rollBarrelDegreesCommand(shooter, 5));
+
+            // Aim cannon up/down
+            controller.povUp().onTrue(new PitchBarrelDegreesCommand(shooter, 5));
+            controller.povDown().onTrue(new PitchBarrelDegreesCommand(shooter, 0));
+
+            // Fire the cannon
+            controller.a().onTrue(new ShootCommand(shooter));
+        }
+
+        if (vision != null) {
+            // Tracking
+            controller.b().onTrue(new DisenableTrackerCommand(vision));
+        }
+    }
+
+    public static ShooterSubsystem shooter() { return shooter; }
+    public static SwerveSubsystem swerve() { return swerve; }
+    public static VisionSubsystem visionSubsystem() { return vision; }
 }
