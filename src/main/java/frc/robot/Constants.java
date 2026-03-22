@@ -48,6 +48,12 @@ public class Constants {
         public static final double DISTANCE_CONVERSION_FACTOR = 0.333; // 1/3
     }
 
+    public class leds {
+        public static final int LEDS_PORT = 0; //temp value
+        public static final int LEDS_NUMBER_OF_LEDS = 0; //temp value
+        public static final int LEDS_WIDTH = 0; //temp value
+    }
+
     public static final double WHEEL_RADIUS = 0.04995d;             // WIP in meters
     public static final int SWERVE_TURNING_ENCODER_RESOLUTION = 4096;  // WIP Number of ticks it takes to turn the wheel (swerve) completely.
     // public static final int SWERVE_MOVING_ENCODER_RESOLUTION = 16384;  // WIP Number of ticks it takes the driving wheel to make a full rotation.

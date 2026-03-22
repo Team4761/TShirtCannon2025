@@ -3,12 +3,12 @@ package frc.robot.subsystems.vision;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
-import org.photonvision.PhotonCamera;
-import org.photonvision.targeting.PhotonPipelineResult;
-import org.photonvision.targeting.PhotonTrackedTarget;
+//import org.photonvision.PhotonCamera;
+//import org.photonvision.targeting.PhotonPipelineResult;
+//import org.photonvision.targeting.PhotonTrackedTarget;
 
 public class VisionSubsystem extends SubsystemBase {
-    private final PhotonCamera camera = new PhotonCamera(Constants.Vision.CAMERA_NAME);
+    //private final PhotonCamera camera = new PhotonCamera(Constants.Vision.CAMERA_NAME);
     private double angleToAprilCode = 0;
     private double distToAprilCode = 0;
     private boolean tracking = false;
@@ -35,9 +35,9 @@ public class VisionSubsystem extends SubsystemBase {
     }
 
     public void processAprilTags() {
-        PhotonPipelineResult results = camera.getLatestResult();
+        //PhotonPipelineResult results = camera.getLatestResult();
 
-        if (results.hasTargets()) {
+        /*if (results.hasTargets()) {
             for (PhotonTrackedTarget target : results.getTargets()) {
                 if (target.getFiducialId() == 22) {
                     Transform3d cameraToTarget = target.getBestCameraToTarget();
@@ -55,7 +55,7 @@ public class VisionSubsystem extends SubsystemBase {
                     }
                 }
             }
-        }
+        }*/
 
         this.angleToAprilCode = 0;
         this.distToAprilCode = 0;
